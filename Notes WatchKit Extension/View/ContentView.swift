@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var notes: [Note] = [Note]()
     @State private var text: String = ""
-    
+    @AppStorage("lineCount") var lineCount : Int = 1
     
     func getDocumentDirectory() -> URL {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -74,9 +74,11 @@ struct ContentView: View {
             if notes.count>=1 {
                 List {
                     ForEach(0..<notes.count,id:\.self){ i in
-                        HStack {
-                            Capsule().frame(width: 4).foregroundColor(.accentColor)
-                            Text(notes[i].text).lineLimit(1).padding(.leading, 5)
+                        NavigationLink(destination: DetailView(note: notes[i], count: notes.count, index: i)) {
+                            HStack {
+                                Capsule().frame(width: 4).foregroundColor(.accentColor)
+                                Text(notes[i].text).lineLimit(lineCount).padding(.leading, 5)
+                            }
                         }
                     }
                     .onDelete(perform: delete)
